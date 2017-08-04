@@ -1,0 +1,180 @@
+<!--
+  Wrapper component for concepts
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../gid-api/gid-api.html">
+<!--
+`gid-create-concept`
+
+The `gid-create-concept` element is a data component acting as a wrapper  on gid-api used for handling rest calls for
+fetching the details of a particular concept for a particular user.
+
+<gid-create-concept  api-url='https://ql50yzu0fj.execute-api.us-east-1.amazonaws.com/dev'
+label='id_091' applications = '["100237", "100267"]' lob = '100001'
+impact-area = ' [{"id": "120003","label": "impact-area-label-1"},{"id": "120001","label": "impact-area-label-3"}]' 
+user='111002' createconcept='{{createconcept}}'>
+</gid-create-concept>
+        
+ 
+The fields 'concept' and 'user' are  mandatory.
+
+If 'apiUrl' is not provided, then the component would fetch sample data from mock json.
+
+@demo demo/index.html
+-->
+<dom-module id="gid-create-concept">
+  <template>
+          <!-- fetch entity path  -->
+        	<gid-api entity = '{{apiEntity}}' path='{{path}}'></gid-api>
+        <!--  fetch entity path -->
+        
+         <!-- fetch concept details -->	
+			<gid-api auto=false
+				method="POST" api-url={{createConceptUrl}} response='{{createConceptResponse}}'
+				api-timeout={{createConceptTimeout}} api-params={{createConceptParams}} request-body={{createConceptRequestBody}}>
+		    </gid-api>			
+	    <!-- fetch concept details -->
+
+  </template>
+  <script>
+    (function() {
+     'use strict';
+      Polymer({
+        is:'gid-create-concept',
+        properties:{
+	        	apiUrl:{
+	            	type: String,
+	    	        notify: true,
+	    	        value: ''
+	    	 	},
+	    	 	createConceptUrl:{
+                	type: String,
+        	        notify: true
+        	 	},
+        	 	createConceptTimeout : {
+            		type: Number,
+        	        notify: true,
+        	        value : 0
+        	    },
+        	    createConceptResponse : {
+	     	  		type : Object,
+	     	  		notify : true,
+	     	  		observer : 'createConceptResponseChanged'
+        	  	},
+        	  	createConceptParams : {
+	     	   		type: String,
+	     	   		notify : true
+     	   	    },
+	     	   	createConceptRequestBody : {
+	     	   		type: Object,
+	     	   		notify : true
+	 	   	    },
+	 	   	    createconcept: {
+     	          type: Object,
+     	          value: {},
+     	          notify: true
+     	        },
+     	       	paramsArr: {
+	           	   type: Array,
+	           	   notify: true,
+	           	   value: ["label", "applications", "lob", "impactArea", "owner"]
+                },
+                paramsObj: {
+            	   type: Array,
+	           	   notify: true,
+	           	   value: {}
+                },
+     	      	label: {
+	           	   type: String,
+	           	   notify: true,
+	           	   value: ''
+              	},
+              	applications: {
+	           	   type: Array,
+	           	   notify: true,
+	           	   value: []
+              	},
+              	lob: {
+	           	   type: String,
+	           	   notify: true,
+	           	   value: ''
+              	},
+              	impactArea: {
+	           	   type: Array,
+	           	   notify: true,
+	           	   value: []
+              	},
+              	owner: {
+	           	   type: String,
+	           	   notify: true,
+	           	   value: ''
+              	},
+              	user: {
+     	        	type: String,
+     	        	value : '',
+     	        	notify :  true,
+     	        	observer : 'userModified'
+     	        },
+                path: {
+               	   type: String,
+                   notify: true,
+                   value: '',
+                   observer: 'pathReceived'
+                },
+                apiEntity: {
+               	   type: String,
+                   notify: true
+                }
+               
+        },
+        createConceptResponseChanged : function(newvalue, oldvalue){
+          this.createconcept = [];
+	          if(newvalue != null){
+		             this.async(function() {
+		         		this.createconcept =  newvalue.concept;
+		         		console.log(this.createconcept);
+		   		 	          }, 500);
+	          }
+         	
+         },
+         userModified: function () {
+        	 if (this.user) {
+        		this.owner =  this.user;
+        	 	if (!this.apiUrl) {
+// 	      			this.createConceptUrl = this.importPath + 'assets/json/' + this.entity.toLowerCase() + '.json';
+// 	                this.createConceptTimeout =  this.createConceptTimeout - 1;
+      			}
+        		else {
+         			this.apiEntity = 'CREATE-CONCEPT';
+         		}
+         	}
+				
+         },
+         pathReceived: function(){
+         	if(this.path){
+         		var res = this.path.split(/{([^}]+)}/);
+         		var obj = {};
+         		for (var i in res) {
+         			if(!res[i].startsWith("/")){
+         					if(this[res[i]]){
+         						res[i] = this[res[i]];
+         					}
+         			}
+         		}
+       			this.createConceptUrl = this.apiUrl + res.join("");
+                for (var i in this.paramsArr){
+                	if(this[this.paramsArr[i]]){
+                		obj[this.paramsArr[i]]= this[this.paramsArr[i]];;
+                		}
+                	
+                }
+                this.paramsObj["concept"] =  obj;
+       			this.createConceptRequestBody = this.paramsObj;
+       			this.createConceptTimeout =  this.createConceptTimeout - 1;
+         		
+         	}
+         }
+      });
+    })();
+  </script>
+</dom-module>

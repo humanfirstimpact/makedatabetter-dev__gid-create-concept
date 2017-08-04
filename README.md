@@ -43,5 +43,17 @@ Sample Input: (as JSON payload)
 Output:
 
       {
-        "concept" : {"id":"concept-id"}
-      }
+	"concept": {
+		"id": "concept-id",
+		"label": "concept-label",
+		"owner": {
+			"id": "user-id",
+			"label": "user-name"
+		},
+		"predictedColumns": 13,
+		"confirmedColumns": 0,
+		"eta": 0,
+		"coverage": 0.0,
+		"classificationAccuracyPercentage": 0.0
+	}
+}
