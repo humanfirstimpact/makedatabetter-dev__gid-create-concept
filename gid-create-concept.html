@@ -10,13 +10,13 @@ The `gid-create-concept` element is a data component acting as a wrapper  on gid
 fetching the details of a particular concept for a particular user.
 
 <gid-create-concept  api-url='https://ql50yzu0fj.execute-api.us-east-1.amazonaws.com/dev'
-label='id_091' applications = '["100237", "100267"]' lob = '100001'
+label='id_832' applications = '["100237", "100267"]' lob = '100001'
 impact-area = ' [{"id": "120003","label": "impact-area-label-1"},{"id": "120001","label": "impact-area-label-3"}]' 
-user='111002' createconcept='{{createconcept}}'>
+user='111002' create = true response='{{response}}'>
 </gid-create-concept>
         
  
-The fields 'concept' and 'user' are  mandatory.
+The fields 'concept', 'user' and 'create' are  mandatory.
 
 If 'apiUrl' is not provided, then the component would fetch sample data from mock json.
 
@@ -69,7 +69,7 @@ If 'apiUrl' is not provided, then the component would fetch sample data from moc
 	     	   		type: Object,
 	     	   		notify : true
 	 	   	    },
-	 	   	    createconcept: {
+	 	   	    response: {
      	          type: Object,
      	          value: {},
      	          notify: true
@@ -112,8 +112,7 @@ If 'apiUrl' is not provided, then the component would fetch sample data from moc
               	user: {
      	        	type: String,
      	        	value : '',
-     	        	notify :  true,
-     	        	observer : 'userModified'
+     	        	notify :  true
      	        },
                 path: {
                	   type: String,
@@ -123,22 +122,29 @@ If 'apiUrl' is not provided, then the component would fetch sample data from moc
                 },
                 apiEntity: {
                	   type: String,
-                   notify: true
+                   notify: true,
+                   private: true
+                },
+                create: {
+                	type: Boolean,
+             		notify: true,
+             		value: false,
+             		observer: 'createConcept'
                 }
                
         },
         createConceptResponseChanged : function(newvalue, oldvalue){
-          this.createconcept = [];
+          this.response = [];
 	          if(newvalue != null){
 		             this.async(function() {
-		         		this.createconcept =  newvalue.concept;
-		         		console.log(this.createconcept);
+		         		this.response =  newvalue.concept;
+		         		console.log(this.response);
 		   		 	          }, 500);
 	          }
          	
          },
-         userModified: function () {
-        	 if (this.user) {
+         createConcept: function () {
+        	 if (this.create) {
         		this.owner =  this.user;
         	 	if (!this.apiUrl) {
 // 	      			this.createConceptUrl = this.importPath + 'assets/json/' + this.entity.toLowerCase() + '.json';

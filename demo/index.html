@@ -13,41 +13,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <title>gid create concept</title>
 
-    <link rel="import" href="../gid-create-concept.html">
-    <style>
-	  	table, th, td {
-	    border: 1px solid grey;
-	    border-collapse: collapse;
-		}
-		td {
-		    text-align: center;
-		}
-  	</style>
+    <link rel="import" href="create-concept.html">
 </head>
 <body unresolved>
 <h1>Create concept</h1>
 
-<div class="horizontal-section-container">
-    <template is="dom-bind" id="app">
-    
-        <gid-create-concept  api-url='https://ql50yzu0fj.execute-api.us-east-1.amazonaws.com/dev'
-        label='id_091' applications = '["100237", "100267"]' lob = '100001'
-        impact-area = ' [{"id": "120003","label": "impact-area-label-1"},{"id": "120001","label": "impact-area-label-3"}]' 
-    	user='111002' createconcept='{{createconcept}}'>
-        </gid-create-concept>
-        
-        <template is="dom-if" if="[[createconcept]]">
-            <div class="horizontal-section">
-                <p>{{createconcept.id}}</p>
-            </div>
-        </template>
-        <template is="dom-if" if="![[createconcept.conceptCreated]]">
-            <div class="horizontal-section">
-                <p>{{createconcept.message}}</p>
-            </div>
-        </template>
-    </template>
-</div>
+<create-concept></create-concept>
 
 <script>
     var app = document.querySelector('#app');
