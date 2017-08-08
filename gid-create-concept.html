@@ -6,19 +6,57 @@
 <!--
 `gid-create-concept`
 
-The `gid-create-concept` element is a data component acting as a wrapper  on gid-api used for handling rest calls for
-fetching the details of a particular concept for a particular user.
 
-<gid-create-concept  api-url='https://ql50yzu0fj.execute-api.us-east-1.amazonaws.com/dev'
-label='id_832' applications = '["100237", "100267"]' lob = '100001'
-impact-area = ' [{"id": "120003","label": "impact-area-label-1"},{"id": "120001","label": "impact-area-label-3"}]' 
-user='111002' create = true response='{{response}}'>
-</gid-create-concept>
+A data component to create concept
+
+    <gid-create-concept user='1' concept='{{concept}}'>
+    </gid-create-concept>
         
  
 The fields 'concept', 'user' and 'create' are  mandatory.
 
 If 'apiUrl' is not provided, then the component would fetch sample data from mock json.
+
+
+API endpoint:
+
+    POST /concepts
+
+Input:
+
+- Label of the concept
+- List of applications
+- LOB Id
+- User Id
+- List of impact Area
+
+Sample Input: (as JSON payload)
+
+	    {
+		"concept": {
+		  "label" : "Domain Name",
+		  "applications":["app-id-1","app-id-2"],
+		  "lob" : "lob-id",
+		  "impactArea" : [
+				{ 
+					"id": "impact-area-id-1",
+					"label": "impact-area-label-1",
+				},
+				{ 
+					"id": "impact-area-id-2",
+					"label": "impact-area-label-3",
+				}
+			],
+		  "owner" : "user-id"
+		}	        
+	    }
+	
+Output:
+
+      {
+        "concept" : {"id":"concept-id"}
+      }
+      
 
 @demo demo/index.html
 -->

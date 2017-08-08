@@ -1,47 +1,36 @@
 # gid-create-concept
 
-A data component to create concept
+## Install the Polymer-CLI
 
-    <gid-create-concept user='1' concept='{{concept}}'>
-    </<gid-create-concept>
-    
-The properties 'concept' and 'user' are mandatory.
+First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
 
-API endpoint:
+## Viewing Your Application
 
-    POST /concepts
+```
+$ polymer serve
+```
 
-Input:
+## Building Your Application
 
-- Label of the concept
-- List of applications
-- LOB Id
-- User Id
-- List of impact Area
+```
+$ polymer build
+```
 
-Sample Input: (as JSON payload)
+This will create a `build/` folder with `bundled/` and `unbundled/` sub-folders
+containing a bundled (Vulcanized) and unbundled builds, both run through HTML,
+CSS, and JS optimizers.
 
-	    {
-		"concept": {
-		  "label" : "Domain Name",
-		  "applications":["app-id-1","app-id-2"],
-		  "lob" : "lob-id",
-		  "impactArea" : [
-				{ 
-					"id": "impact-area-id-1",
-					"label": "impact-area-label-1",
-				},
-				{ 
-					"id": "impact-area-id-2",
-					"label": "impact-area-label-3",
-				}
-			],
-		  "owner" : "user-id"
-		}	        
-	    }
-	
-Output:
+You can serve the built versions by giving `polymer serve` a folder to serve
+from:
 
-      {
-        "concept" : {"id":"concept-id"}
-      }
+```
+$ polymer serve build/bundled
+```
+
+## Running Tests
+
+```
+$ polymer test
+```
+
+Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
