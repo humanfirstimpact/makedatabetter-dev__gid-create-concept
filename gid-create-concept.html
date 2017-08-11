@@ -173,6 +173,8 @@ Output:
         },
         createConceptResponseChanged : function(newvalue, oldvalue){
           this.response = [];
+		  this.apiEntity = '';
+          this.path = '';
 	          if(newvalue != null){
 		             this.async(function() {
 		         		this.response =  newvalue.concept;
