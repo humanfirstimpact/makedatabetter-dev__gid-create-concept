@@ -165,8 +165,7 @@ Output:
           this.path = '';
 	          if(newvalue != null){
 		             this.async(function() {
-		         		this.response =  newvalue.concept;
-		         		console.log(this.response);
+		         		this.response =  newvalue;
 		   		 	          }, 500);
 	          }
          	
@@ -202,7 +201,7 @@ Output:
                 		}
                 	
                 }
-                this.paramsObj["concept"] =  obj;
+                this.paramsObj["domain"] =  obj;
        			this.createConceptRequestBody = this.paramsObj;
        			this.createConceptTimeout =  this.createConceptTimeout - 1;
          		

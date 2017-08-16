@@ -3,19 +3,19 @@
 <dom-module id="create-concept">
   <template>
         <gid-create-concept  api-url='https://ql50yzu0fj.execute-api.us-east-1.amazonaws.com/dev'
-        label='id_998' applications = '["100237", "100267"]' lob = '100001'
+        label='id_1080' applications = '["100237", "100267"]' lob = '100001'
         impact-area = ' [{"id": "120003","label": "impact-area-label-1"},{"id": "120001","label": "impact-area-label-3"}]' 
     	user='111002' create = true response='{{response}}'>
         </gid-create-concept>
         
         <template is="dom-if" if="[[isConceptCreated]]">
             <div class="horizontal-section">
-                <p>The created concept is &nbsp; {{response.label}}</p>
+                <p>The create concept is &nbsp;{{response.domain.id}}</p>
             </div>
         </template>
         <template is="dom-if" if="![[isConceptCreated]]">
             <div class="horizontal-section">
-                <p>{{response.label}} &nbsp; {{response.message}}</p>
+                <p>{{response.developerMessage}}</p>
             </div>
         </template>
 
@@ -38,12 +38,12 @@
      	        }
         },
          responseReceived: function () {
-        	 if(this.response.length > 0){
-				if(this.response.hasOwnProperty('conceptCreated') && !this.response.conceptCreated){
-					this.isConceptCreated = false;
+        	 if(this.response){	
+				if(this.response.hasOwnProperty('domain')){
+					this.isConceptCreated = true;
 				}
 				else{
-					this.isConceptCreated =  true;
+					this.isConceptCreated =  false;
 				}
         	 }
          }
