@@ -56,9 +56,9 @@ Output:
         
          <!-- fetch concept details -->	
 			<gid-api auto=false
-				method="POST" api-url={{createConceptUrl}} response='{{createConceptResponse}}'
+				method="POST" api-content-type = "application/x-www-form-urlencoded" api-url={{createConceptUrl}} response='{{createConceptResponse}}'
 				api-params={{createConceptParams}} api-token = {{createConceptToken}} request-body={{createConceptRequestBody}} 
-				api-timeout={{createConceptTimeout}}>
+				api-timeout={{createConceptTimeout}} error = '{{createConceptErrorResponse}}'>
 		    </gid-api>			
 	    <!-- fetch concept details -->
 
@@ -99,12 +99,18 @@ Output:
      	   	    },
 	     	   	createConceptRequestBody : {
 	     	   		type: Object,
-	     	   		notify : true
+	     	   		notify : true,
+	     	   		value : {}
 	 	   	    },
 	 	   	    createConceptToken : {
 	 	   	    	type: String,
 	 	   	    	notify: true
 	 	   	    },
+	 	   		createConceptErrorResponse : {
+		 	   		type: String,
+	 	   	    	notify: true,
+	 	   	    	observer : 'errorResponseReceived'
+	 	   		},
 	 	   	    response: {
      	          type: Object,
      	          value: {},
@@ -180,6 +186,16 @@ Output:
 	          }
          	
          },
+         errorResponseReceived :  function(newvalue, oldvalue){
+        	 this.response = [];
+   		  	 this.apiEntity = '';
+             this.path = '';
+	        	if(newvalue !== null){
+	        		this.async(function() {
+		         		this.response =  newvalue.response;
+		   		 	          }, 500);
+	        	}
+	     },
          createConcept: function () {
         	 if (this.create) {
         		this.owner =  this.user;
@@ -212,7 +228,7 @@ Output:
                 	
                 }
                 this.paramsObj["domain"] =  obj;
-       			this.createConceptRequestBody = this.paramsObj;
+       			this.createConceptRequestBody["definition"] = JSON.stringify(this.paramsObj);
        			if(this.apiToken){
        				this.createConceptToken =  this.apiToken;
        			}

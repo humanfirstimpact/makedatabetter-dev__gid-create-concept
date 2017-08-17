@@ -2,15 +2,13 @@
 
 <dom-module id="create-concept">
   <template>
-        <gid-create-concept  api-url='https://ql50yzu0fj.execute-api.us-east-1.amazonaws.com/dev'
-        label='id_1080' applications = '["100237", "100267"]' lob = '100001'
-        impact-area = ' [{"id": "120003","label": "impact-area-label-1"},{"id": "120001","label": "impact-area-label-3"}]' 
-    	user='111002' api-token = 'VVNfMjItMzg0MjY1N18xMTA1MTY0MzI5NzY0MTUwMjQ1MTUxMTQ1MzI3MDFY' create = true response='{{response}}'>
+        <gid-create-concept  api-url='http://192.168.44.106:45450/api/v1'
+        label='id_1189' user = '1' applications = '["100802792"]'  api-token = 'VVNfMjItMzg0MjY1N18xMTA1MTY0MzI5NzY0MTUwMjk0NzQ3MDMwNTI3MDFY' create = true response='{{response}}'>
         </gid-create-concept>
         
         <template is="dom-if" if="[[isConceptCreated]]">
             <div class="horizontal-section">
-                <p>The created concept is &nbsp;{{response.domain.id}}</p>
+                <p>The newly created concept's id is &nbsp;{{response.domain.id}}</p>
             </div>
         </template>
         <template is="dom-if" if="![[isConceptCreated]]">
