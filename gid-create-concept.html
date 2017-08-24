@@ -51,7 +51,7 @@ Output:
 <dom-module id="gid-create-concept">
   <template>
           <!-- fetch entity path  -->
-        	<gid-api entity = '{{apiEntity}}' path='{{path}}'></gid-api>
+        	<gid-api entity = '{{apiEntity}}' path-key= '{{pathKey}}' path='{{path}}'></gid-api>
         <!--  fetch entity path -->
         
          <!-- fetch concept details -->	
@@ -156,12 +156,18 @@ Output:
      	        	value : '',
      	        	notify :  true
      	        },
+     	       	pathKey: {
+               	   type: String,
+                   notify: true,
+                   value: ''
+                },
                 path: {
                	   type: String,
                    notify: true,
                    value: '',
                    observer: 'pathReceived'
                 },
+                
                 apiEntity: {
                	   type: String,
                    notify: true,
@@ -206,6 +212,7 @@ Output:
 // 	                this.createConceptTimeout =  this.createConceptTimeout - 1;
       			}
         		else {
+        			this.pathKey =  'default';
          			this.apiEntity = 'CREATE-CONCEPT';
          		}
          	}
