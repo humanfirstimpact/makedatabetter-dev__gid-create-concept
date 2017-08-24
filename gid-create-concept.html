@@ -183,9 +183,7 @@ Output:
         },
         createConceptResponseChanged : function(newvalue, oldvalue){
           this.response = [];
-		  this.apiEntity = '';
-          this.path = '';
-		  this.create = false;
+		  this.reset();
 	          if(newvalue != null){
 		             this.async(function() {
 		         		this.response =  newvalue;
@@ -195,15 +193,18 @@ Output:
          },
          errorResponseReceived :  function(newvalue, oldvalue){
         	 this.response = [];
-   		  	 this.apiEntity = '';
-             this.path = '';
-			 this.create = false;
+   		  	 this.reset();
 	        	if(newvalue !== null){
 	        		this.async(function() {
 		         		this.response =  newvalue.response;
 		   		 	          }, 500);
 	        	}
 	     },
+		 reset: function(){
+			this.apiEntity = '';
+            this.path = '';
+			this.create = false;
+		 },
          createConcept: function () {
         	 if (this.create) {
         		this.owner =  this.user;
