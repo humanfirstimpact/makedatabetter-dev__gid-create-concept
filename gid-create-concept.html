@@ -9,11 +9,15 @@
 
 A data component to create concept
 
-    <gid-create-concept user='1' concept='{{concept}}'>
+    <gid-create-concept user='1' concept='10002' create = true response = {{response}}>
     </gid-create-concept>
         
  
 The fields 'concept', 'user' and 'create' are  mandatory.
+
+The field 'create' needs to be set 'true' to create a concept.
+
+The property 'response' returns the response of the rest call.
 
 If 'apiUrl' is not provided, then the component would fetch sample data from mock json.
 
