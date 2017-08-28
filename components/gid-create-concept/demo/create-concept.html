@@ -2,20 +2,19 @@
 
 <dom-module id="create-concept">
   <template>
-        <gid-create-concept  api-url='https://ql50yzu0fj.execute-api.us-east-1.amazonaws.com/dev'
-        label='id_832' applications = '["100237", "100267"]' lob = '100001'
-        impact-area = ' [{"id": "120003","label": "impact-area-label-1"},{"id": "120001","label": "impact-area-label-3"}]' 
-    	user='111002' create = true response='{{response}}'>
+        <gid-create-concept  api-url='https://srv-34-197-77-167.globalids.com:8443/api/v1'
+        label='test domain' user = '1' applications = '["101650155"]'  api-token = 'MTAxNjUwMzAxMTUwMzU1NjY3ODU3MDA5MDFY' 
+        create = true response='{{response}}'>
         </gid-create-concept>
         
         <template is="dom-if" if="[[isConceptCreated]]">
             <div class="horizontal-section">
-                <p>The created concept is &nbsp; {{response.label}}</p>
+                <p>The newly created concept's id is &nbsp;{{response.domain.id}}</p>
             </div>
         </template>
         <template is="dom-if" if="![[isConceptCreated]]">
             <div class="horizontal-section">
-                <p>{{response.label}} &nbsp; {{response.message}}</p>
+                <p>{{response.developerMessage}}</p>
             </div>
         </template>
 
@@ -27,8 +26,8 @@
         is:'create-concept',
         properties:{
 	 	   	    response: {
-     	          type: Object,
-     	          value: {},
+     	          type: Array,
+     	          value: [],
      	          notify: true,
      	          observer: 'responseReceived'
      	        },
@@ -38,12 +37,12 @@
      	        }
         },
          responseReceived: function () {
-        	 if(this.response.length > 0){
-				if(this.response.hasOwnProperty('conceptCreated') && !this.response.conceptCreated){
-					this.isConceptCreated = false;
+        	 if(this.response){	
+				if(this.response.hasOwnProperty('domain')){
+					this.isConceptCreated = true;
 				}
 				else{
-					this.isConceptCreated =  true;
+					this.isConceptCreated =  false;
 				}
         	 }
          }

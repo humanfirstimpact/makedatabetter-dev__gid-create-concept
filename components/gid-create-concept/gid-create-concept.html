@@ -9,11 +9,15 @@
 
 A data component to create concept
 
-    <gid-create-concept user='1' concept='{{concept}}'>
+    <gid-create-concept user='1' concept='10002' create = true response = {{response}}>
     </gid-create-concept>
         
  
 The fields 'concept', 'user' and 'create' are  mandatory.
+
+The field 'create' needs to be set 'true' to create a concept.
+
+The property 'response' returns the response of the rest call.
 
 If 'apiUrl' is not provided, then the component would fetch sample data from mock json.
 
@@ -33,28 +37,16 @@ Input:
 Sample Input: (as JSON payload)
 
 	    {
-		"concept": {
+		"domain": {
 		  "label" : "Domain Name",
-		  "applications":["app-id-1","app-id-2"],
-		  "lob" : "lob-id",
-		  "impactArea" : [
-				{ 
-					"id": "impact-area-id-1",
-					"label": "impact-area-label-1",
-				},
-				{ 
-					"id": "impact-area-id-2",
-					"label": "impact-area-label-3",
-				}
-			],
-		  "owner" : "user-id"
+		  "lobs" : ["lob-id"]
 		}	        
 	    }
 	
 Output:
 
       {
-        "concept" : {"id":"concept-id"}
+        "domain" : {"id":"domain-id"}
       }
       
 
@@ -63,13 +55,14 @@ Output:
 <dom-module id="gid-create-concept">
   <template>
           <!-- fetch entity path  -->
-        	<gid-api entity = '{{apiEntity}}' path='{{path}}'></gid-api>
+        	<gid-api entity = '{{apiEntity}}' path-key= '{{pathKey}}' path='{{path}}'></gid-api>
         <!--  fetch entity path -->
         
          <!-- fetch concept details -->	
 			<gid-api auto=false
-				method="POST" api-url={{createConceptUrl}} response='{{createConceptResponse}}'
-				api-timeout={{createConceptTimeout}} api-params={{createConceptParams}} request-body={{createConceptRequestBody}}>
+				method="POST" api-content-type = "application/x-www-form-urlencoded" api-url={{createConceptUrl}} response='{{createConceptResponse}}'
+				api-params={{createConceptParams}} api-token = {{createConceptToken}} request-body={{createConceptRequestBody}} 
+				api-timeout={{createConceptTimeout}} error = '{{createConceptErrorResponse}}'>
 		    </gid-api>			
 	    <!-- fetch concept details -->
 
@@ -80,6 +73,11 @@ Output:
       Polymer({
         is:'gid-create-concept',
         properties:{
+	        	apiToken: {
+	            	type: String,
+	                notify: true,
+	                value : ''
+	            },
 	        	apiUrl:{
 	            	type: String,
 	    	        notify: true,
@@ -105,8 +103,18 @@ Output:
      	   	    },
 	     	   	createConceptRequestBody : {
 	     	   		type: Object,
-	     	   		notify : true
+	     	   		notify : true,
+	     	   		value : {}
 	 	   	    },
+	 	   	    createConceptToken : {
+	 	   	    	type: String,
+	 	   	    	notify: true
+	 	   	    },
+	 	   		createConceptErrorResponse : {
+		 	   		type: String,
+	 	   	    	notify: true,
+	 	   	    	observer : 'errorResponseReceived'
+	 	   		},
 	 	   	    response: {
      	          type: Object,
      	          value: {},
@@ -115,7 +123,7 @@ Output:
      	       	paramsArr: {
 	           	   type: Array,
 	           	   notify: true,
-	           	   value: ["label", "applications", "lob", "impactArea", "owner"]
+	           	   value: ["label", "applications", "lobs", "impactArea", "owner"]
                 },
                 paramsObj: {
             	   type: Array,
@@ -132,10 +140,10 @@ Output:
 	           	   notify: true,
 	           	   value: []
               	},
-              	lob: {
-	           	   type: String,
+              	lobs: {
+	           	   type: Array,
 	           	   notify: true,
-	           	   value: ''
+	           	   value: []
               	},
               	impactArea: {
 	           	   type: Array,
@@ -152,12 +160,18 @@ Output:
      	        	value : '',
      	        	notify :  true
      	        },
+     	       	pathKey: {
+               	   type: String,
+                   notify: true,
+                   value: ''
+                },
                 path: {
                	   type: String,
                    notify: true,
                    value: '',
                    observer: 'pathReceived'
                 },
+                
                 apiEntity: {
                	   type: String,
                    notify: true,
@@ -173,14 +187,28 @@ Output:
         },
         createConceptResponseChanged : function(newvalue, oldvalue){
           this.response = [];
+		  this.reset();
 	          if(newvalue != null){
 		             this.async(function() {
-		         		this.response =  newvalue.concept;
-		         		console.log(this.response);
+		         		this.response =  newvalue;
 		   		 	          }, 500);
 	          }
          	
          },
+         errorResponseReceived :  function(newvalue, oldvalue){
+        	 this.response = [];
+   		  	 this.reset();
+	        	if(newvalue !== null){
+	        		this.async(function() {
+		         		this.response =  newvalue.response;
+		   		 	          }, 500);
+	        	}
+	     },
+		 reset: function(){
+			this.apiEntity = '';
+            this.path = '';
+			this.create = false;
+		 },
          createConcept: function () {
         	 if (this.create) {
         		this.owner =  this.user;
@@ -189,6 +217,7 @@ Output:
 // 	                this.createConceptTimeout =  this.createConceptTimeout - 1;
       			}
         		else {
+        			this.pathKey =  'default';
          			this.apiEntity = 'CREATE-CONCEPT';
          		}
          	}
@@ -212,8 +241,11 @@ Output:
                 		}
                 	
                 }
-                this.paramsObj["concept"] =  obj;
-       			this.createConceptRequestBody = this.paramsObj;
+                this.paramsObj["domain"] =  obj;
+       			this.createConceptRequestBody["definition"] = JSON.stringify(this.paramsObj);
+       			if(this.apiToken){
+       				this.createConceptToken =  this.apiToken;
+       			}
        			this.createConceptTimeout =  this.createConceptTimeout - 1;
          		
          	}

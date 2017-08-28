@@ -1,23 +1,60 @@
-var apis = {
-		"lobs": "/lobs",
-		"concepts": "/lobs/{lob}/concepts",
-		"applications": "/concepts/{concept}/applications",
-		"databases": "/concepts/{concept}/applications/{application}/databases",
-		"schemas": "/concepts/{concept}/applications/{application}/databases/{database}/schemas",
-		"tables": "/concepts/{concept}/applications/{application}/databases/{database}/schemas/{schema}/tables",
-		"columns": "/concepts/{concept}/applications/{application}/databases/{database}/schemas/{schema}/tables/{table}/columns",
-		"coverage": "/concepts/{concept}/coverage",
-		"table-columns": "/tables/{table}/columns",
-		"table-data": "/tables/{table}/rows",
-		"recommended-concepts": "/columns/{column}/recommendedconcepts",
-		"verify-concept": "/columns/{column}/recommendedconcepts/{concept}/verify",
-		"samples": "/columns/{column}/samples",
-		"synonyms": "/columns/{column}/synonyms",
-		"patterns": "/columns/{column}/patterns",
-		"list-concepts": "/concepts",
-		"concept-details": "/concepts/{concept}",
-		"curate-concept": "/concepts/{concept}/curate",
-		"create-concept": "/concepts",
-		"edit-concept": "/concepts/{concept}",
-		"remove-concept": "/concepts/{concept}"
-	}
+var apiPath = {
+		  "lobs":{
+			  "default": "/lobs" 
+		  },
+		  "concepts": {
+			"default": "/lobs/{lob}/domains"
+		  },
+		  "applications": {
+		    "default": "/domains/{concept}/applications",
+		    "all": "/applications"
+		  },
+		  "databases": {
+		    "default": "/domains/{concept}/applications/{application}/databases",
+		    "all": "/applications/{application}/databases"
+		  },
+		  "schemas": {
+		    "default": "/domains/{concept}/applications/{application}/databases/{database}/schemas",
+		    "all": "/applications/{application}/databases/{database}/schemas"
+		  },
+		  "tables": {
+		    "default": "/domains/{concept}/schemas/{schema}/tables",
+		    "all": "/schemas/{schema}/tables"
+		  },
+		  "columns": {
+		    "table": "/domains/{concept}/tables/{table}/columns",
+		    "schema": "/domains/{concept}/schemas/{schema}/columns",
+		    "database": "/domains/{concept}/applications/{application}/databases/{database}/columns",
+		    "application": "/domains/{concept}/applications/{application}/columns"
+		  },
+		  "get-samples": {
+			 "default": "/samples"
+		  },
+		  "recommended-concepts": {
+			 "default": "/columns/{column}/domains"
+		  },
+		  "verify-concept": {
+			  "default": "/columns/{column}/domains/{concept}"
+		  },
+		  "list-concepts": {
+			  "default": "/domains"
+		  },
+		  "concept-details":{
+			  "default": "/domains/{concept}"
+		  },
+		  "curate-concept": {
+			  "default": "/domains/{concept}/curation"
+		  },
+		  "create-concept": {
+			  "default": "/domains"
+		  },
+		  "edit-concept": {
+			  "default": "/domains/{concept}"
+		  },
+		  "remove-concept": {
+			  "default": "/domains/{concept}"
+		  },
+		  "auth": {
+			  "default": "/api/security/api-token-v1"
+		  }
+		};
