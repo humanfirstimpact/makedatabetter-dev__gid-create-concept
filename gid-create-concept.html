@@ -55,14 +55,14 @@ Output:
 <dom-module id="gid-create-concept">
   <template>
           <!-- fetch entity path  -->
-        	<gid-api entity = '{{apiEntity}}' path-key= '{{pathKey}}' path='{{path}}'></gid-api>
+        	<gid-api entity = '{{_apiEntity}}' path-key= '{{_pathKey}}' path='{{_path}}'></gid-api>
         <!--  fetch entity path -->
         
          <!-- fetch concept details -->	
 			<gid-api auto=false
-				method="POST" api-content-type = "application/x-www-form-urlencoded" api-url={{createConceptUrl}} response='{{createConceptResponse}}'
-				api-params={{createConceptParams}} api-token = {{createConceptToken}} request-body={{createConceptRequestBody}} 
-				api-timeout={{createConceptTimeout}} error = '{{createConceptErrorResponse}}'>
+				method="POST" api-content-type = "application/x-www-form-urlencoded" api-url={{_createConceptUrl}} response='{{createConceptResponse}}'
+				api-params={{_createConceptParams}} api-token = {{_createConceptToken}} request-body={{_createConceptRequestBody}} 
+				api-timeout={{_createConceptTimeout}} error = '{{createConceptErrorResponse}}'>
 		    </gid-api>			
 	    <!-- fetch concept details -->
 
@@ -73,159 +73,184 @@ Output:
       Polymer({
         is:'gid-create-concept',
         properties:{
+        		/*Authorization token for accessing rest api*/
 	        	apiToken: {
 	            	type: String,
 	                notify: true,
 	                value : ''
 	            },
+	            /*Base url*/
 	        	apiUrl:{
 	            	type: String,
 	    	        notify: true,
 	    	        value: ''
 	    	 	},
-	    	 	createConceptUrl:{
+	    	 	/*Url sent to gid-api*/
+	    	 	_createConceptUrl:{
                 	type: String,
         	        notify: true
         	 	},
-        	 	createConceptTimeout : {
+        	 	/*Timeout sent to gid-api*/
+        	 	_createConceptTimeout : {
             		type: Number,
         	        notify: true,
         	        value : 0
         	    },
+        	    /*Response sent to gid-api. This is a private property*/
         	    createConceptResponse : {
 	     	  		type : Object,
 	     	  		notify : true,
-	     	  		observer : 'createConceptResponseChanged'
+	     	  		observer : '_createConceptResponseChanged'
         	  	},
-        	  	createConceptParams : {
+        	  	/*Params sent to gid-api*/
+        	  	_createConceptParams : {
 	     	   		type: String,
 	     	   		notify : true
      	   	    },
-	     	   	createConceptRequestBody : {
+     	   		/*Request body sent to gid-api*/
+	     	   	_createConceptRequestBody : {
 	     	   		type: Object,
 	     	   		notify : true,
 	     	   		value : {}
 	 	   	    },
-	 	   	    createConceptToken : {
+	 	   		/*Token sent to gid-api*/
+	 	   	    _createConceptToken : {
 	 	   	    	type: String,
 	 	   	    	notify: true
 	 	   	    },
+	 	   		/*Error sent to gid-api. This is a private property*/
 	 	   		createConceptErrorResponse : {
 		 	   		type: String,
 	 	   	    	notify: true,
-	 	   	    	observer : 'errorResponseReceived'
+	 	   	    	observer : '_errorResponseReceived'
 	 	   		},
+	 	   		/*Object for storing success/error response*/
 	 	   	    response: {
-     	          type: Object,
-     	          value: {},
+     	          type: Array,
+     	          value: [],
      	          notify: true
      	        },
-     	       	paramsArr: {
+     	       /*Array listing the parameters*/
+     	       	_paramsArr: {
 	           	   type: Array,
 	           	   notify: true,
 	           	   value: ["label", "applications", "lobs", "impactArea", "owner"]
                 },
-                paramsObj: {
+                /*Parameter object*/
+                _paramsObj: {
             	   type: Array,
 	           	   notify: true,
 	           	   value: {}
                 },
+                /*Label property*/
      	      	label: {
 	           	   type: String,
 	           	   notify: true,
 	           	   value: ''
               	},
+              	/*Array of application ids*/
               	applications: {
 	           	   type: Array,
 	           	   notify: true,
 	           	   value: []
               	},
+              	/*Array of lob ids*/
               	lobs: {
 	           	   type: Array,
 	           	   notify: true,
 	           	   value: []
               	},
+              	/*Array of impact areas*/
               	impactArea: {
 	           	   type: Array,
 	           	   notify: true,
 	           	   value: []
               	},
+              	/*User id is stored here. This is a private property*/
               	owner: {
 	           	   type: String,
 	           	   notify: true,
 	           	   value: ''
               	},
+              	/*User Id*/
               	user: {
      	        	type: String,
      	        	value : '',
      	        	notify :  true
      	        },
-     	       	pathKey: {
+     	       /*The api path key*/
+     	       	_pathKey: {
                	   type: String,
                    notify: true,
                    value: ''
                 },
-                path: {
+                /*The api path*/
+                _path: {
                	   type: String,
                    notify: true,
                    value: '',
-                   observer: 'pathReceived'
+                   observer: '_pathReceived'
                 },
-                
-                apiEntity: {
+                /*Api entity sent to gid-api*/
+                _apiEntity: {
                	   type: String,
-                   notify: true,
-                   private: true
+                   notify: true
                 },
+               /*This flag needs to be set 'true' to create a concept*/
                 create: {
                 	type: Boolean,
              		notify: true,
              		value: false,
-             		observer: 'createConcept'
+             		observer: '_createConcept'
                 }
                
         },
-        createConceptResponseChanged : function(newvalue, oldvalue){
+        /* Success response handler */
+        _createConceptResponseChanged : function(newvalue, oldvalue){
           this.response = [];
-		  this.reset();
+		  this._reset();
 	          if(newvalue != null){
 		             this.async(function() {
-		         		this.response =  newvalue;
+		         		this.response =  newvalue.domain;
 		   		 	          }, 500);
 	          }
          	
          },
-         errorResponseReceived :  function(newvalue, oldvalue){
+         /* Error response handler */
+         _errorResponseReceived :  function(newvalue, oldvalue){
         	 this.response = [];
-   		  	 this.reset();
+   		  	 this._reset();
 	        	if(newvalue !== null){
 	        		this.async(function() {
 		         		this.response =  newvalue.response;
 		   		 	          }, 500);
 	        	}
 	     },
-		 reset: function(){
-			this.apiEntity = '';
-            this.path = '';
+	     /* Reset method */
+		 _reset: function(){
+			this._apiEntity = '';
+            this._path = '';
 			this.create = false;
 		 },
-         createConcept: function () {
+		 /* Observer of 'create' flag */
+         _createConcept: function () {
         	 if (this.create) {
         		this.owner =  this.user;
         	 	if (!this.apiUrl) {
-// 	      			this.createConceptUrl = this.importPath + 'assets/json/' + this.entity.toLowerCase() + '.json';
-// 	                this.createConceptTimeout =  this.createConceptTimeout - 1;
+// 	      			this._createConceptUrl = this.import_path + 'assets/json/' + this.entity.toLowerCase() + '.json';
+// 	                this._createConceptTimeout =  this._createConceptTimeout - 1;
       			}
         		else {
-        			this.pathKey =  'default';
-         			this.apiEntity = 'CREATE-CONCEPT';
+        			this._pathKey =  'default';
+         			this._apiEntity = 'CREATE-CONCEPT';
          		}
          	}
 				
          },
-         pathReceived: function(){
-         	if(this.path){
-         		var res = this.path.split(/{([^}]+)}/);
+         /* Observer for api path */
+         _pathReceived: function(){
+         	if(this._path){
+         		var res = this._path.split(/{([^}]+)}/);
          		var obj = {};
          		for (var i in res) {
          			if(!res[i].startsWith("/")){
@@ -234,19 +259,19 @@ Output:
          					}
          			}
          		}
-       			this.createConceptUrl = this.apiUrl + res.join("");
-                for (var i in this.paramsArr){
-                	if(this[this.paramsArr[i]]){
-                		obj[this.paramsArr[i]]= this[this.paramsArr[i]];;
+       			this._createConceptUrl = this.apiUrl + res.join("");
+                for (var i in this._paramsArr){
+                	if(this[this._paramsArr[i]]){
+                		obj[this._paramsArr[i]]= this[this._paramsArr[i]];;
                 		}
                 	
                 }
-                this.paramsObj["domain"] =  obj;
-       			this.createConceptRequestBody["definition"] = JSON.stringify(this.paramsObj);
+                this._paramsObj["domain"] =  obj;
+       			this._createConceptRequestBody["definition"] = JSON.stringify(this._paramsObj);
        			if(this.apiToken){
-       				this.createConceptToken =  this.apiToken;
+       				this._createConceptToken =  this.apiToken;
        			}
-       			this.createConceptTimeout =  this.createConceptTimeout - 1;
+       			this._createConceptTimeout =  this._createConceptTimeout - 1;
          		
          	}
          }

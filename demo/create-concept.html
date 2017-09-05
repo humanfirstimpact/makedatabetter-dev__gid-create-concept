@@ -3,13 +3,13 @@
 <dom-module id="create-concept">
   <template>
         <gid-create-concept  api-url='https://srv-34-197-77-167.globalids.com:8443/api/v1'
-        label='test domain' user = '1' applications = '["101650155"]'  api-token = 'MTAxNjUwMzAxMTUwMzU1NjY3ODU3MDA5MDFY' 
+        label='Mail' user = '1' applications = '["101650155"]' lobs = '["100850160"]' api-token = 'MTAxNjUwMzAxMTUwNDUwNTg3NDkwODA5MDFY' 
         create = true response='{{response}}'>
         </gid-create-concept>
         
         <template is="dom-if" if="[[isConceptCreated]]">
             <div class="horizontal-section">
-                <p>The newly created concept's id is &nbsp;{{response.domain.id}}</p>
+                <p>The newly created concept's id is &nbsp;{{response.id}}</p>
             </div>
         </template>
         <template is="dom-if" if="![[isConceptCreated]]">
@@ -37,13 +37,15 @@
      	        }
         },
          responseReceived: function () {
-        	 if(this.response){	
-				if(this.response.hasOwnProperty('domain')){
-					this.isConceptCreated = true;
-				}
-				else{
-					this.isConceptCreated =  false;
-				}
+        	 if(this.response){
+        		 if(this.response.length > 0){	
+      				if(this.response[0]['errorCode']){
+      					this.isConceptCreated = false;
+      				}
+              	 }
+             	 else if(this.response.hasOwnProperty("id")){
+             		 this.isConceptCreated =  true;
+             	 }
         	 }
          }
       });
