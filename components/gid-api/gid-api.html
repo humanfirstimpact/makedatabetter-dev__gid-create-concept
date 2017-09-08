@@ -4,6 +4,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 
+<script src="../lodash/dist/lodash.min.js"></script>
 <script src="assets/js/gidRestApi.js"></script>
 <!--
 `gid-api`
@@ -138,7 +139,8 @@ element.
         		apiList =  apiPath;
         	}
         	if(that.entity){
-	                    that.path = apiList[that.entity.toLowerCase()][that.pathKey];
+        				var temp = that.entity.toLowerCase() + '.' + that.pathKey;
+	                    that.path = _.get(apiList, temp);
         	}
         	 
         },
