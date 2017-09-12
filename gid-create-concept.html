@@ -9,13 +9,24 @@
 
 A data component to create concept
 
-    <gid-create-concept user='1' concept='10002' create = true response = {{response}}>
+    <gid-create-concept api-url ="<your-api-url>" api-token = "<your-api-token>"
+    user="<your-user-id>" concept="<concept-label>" create=true response = {{response}}>
     </gid-create-concept>
         
- 
-The fields 'concept', 'user' and 'create' are  mandatory.
+To create a concept, the user needs to follow the steps mentioned below:
 
-The field 'create' needs to be set 'true' to create a concept.
+ - The desired concept label is to be specified in the 'concept' field
+ - The user id needs to be provided in 'user' parameter.
+ - The 'api-url' needs to be provided to specify the rest end point.
+ - The 'api-token' would contain the access token to access the mentioned rest end point.
+ - The properties 'applications', 'lobs' and 'impact-area' specifies the list of application(s), lob(s) and 
+   impact area(s) where the concept would belong to.
+ - To create the concept, user needs to set the 'create' flag to 'true' in order to trigger the rest call.
+ - The 'response' property would return the response whether the concept has been created successfully or not.
+ 
+The fields 'concept', 'user', 'create' and 'response' are  mandatory.
+
+The field 'create' needs to be set to 'true' to create a concept.
 
 The property 'response' returns the response of the rest call.
 
@@ -28,26 +39,28 @@ API endpoint:
 
 Input:
 
-- Label of the concept
+- User Id*
+- Label of the concept*
 - List of applications
 - LOB Id
-- User Id
 - List of impact Area
+
+Note: The inputs marked with '*' are mandatory inputs.
 
 Sample Input: (as JSON payload)
 
 	    {
-		"domain": {
-		  "label" : "Domain Name",
-		  "lobs" : ["lob-id"]
-		}	        
+			"domain": {
+			  "label" : "Domain Name",
+			  "lobs" : ["lob-id"]
+			}	        
 	    }
 	
 Output:
 
-      {
-        "domain" : {"id":"domain-id"}
-      }
+	      {
+	        "domain" : {"id":"domain-id"}
+	      }
       
 
 @demo demo/index.html
